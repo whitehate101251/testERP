@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
-import { Users, Plus } from "lucide-react";
+import { Users, Plus, Pencil, Trash2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { ApiResponse, Worker } from "@shared/api";
 
@@ -208,11 +208,11 @@ export default function WorkerManagement() {
                           <TableCell className="text-right space-x-3">
                             {isForeman && (
                               <>
-                                <Button size="sm" className="bg-cyan-400 hover:bg-cyan-500 text-white rounded-xl px-3" onClick={()=>startEdit(w)}>
-                                  <span className="sr-only">Edit</span> ✏️
+                                <Button size="sm" variant="outline" className="rounded-xl px-2" onClick={()=>startEdit(w)}>
+                                  <Pencil className="h-4 w-4" />
                                 </Button>
-                                <Button size="sm" className="bg-rose-500 hover:bg-rose-600 text-white rounded-xl px-3" onClick={()=>deleteWorker(w.id)}>
-                                  <span className="sr-only">Delete</span> 🗑️
+                                <Button size="sm" variant="destructive" className="rounded-xl px-2" onClick={()=>deleteWorker(w.id)}>
+                                  <Trash2 className="h-4 w-4" />
                                 </Button>
                               </>
                             )}
