@@ -156,7 +156,7 @@ export default function AttendanceSubmission() {
       }
       const parsed: EntryWithFormula[] = JSON.parse(stored);
       setAttendanceEntries(parsed);
-      toast({ title: "ड्राफ्ट लोड हुआ", description: "पिछला सेव ड्राफ्ट लोड कर दिया गया" });
+      toast({ title: "ड्राफ्ट लोड हुआ", description: "पिछला सेव ड्राफ्ट लो��� कर दिया गया" });
     } catch {
       toast({ title: "Error", description: "Failed to load draft", variant: "destructive" });
     }
@@ -385,14 +385,10 @@ export default function AttendanceSubmission() {
                   <TableHead className="w-12 pl-[19px] pr-4">P/A</TableHead>
                   <TableHead className="pr-[15px] pl-[41px]">नाम</TableHead>
                   <TableHead className="pr-4 pl-8">पिता का नाम</TableHead>
-                  <TableHead className="w-40 relative px-4" colSpan={2}>
-                    <div className="grid grid-cols-2 place-items-center h-8">
-                      <span className="text-[17px]">X</span>
-                      <span className="text-[17px]">Y</span>
-                    </div>
-                    <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-xs text-muted-foreground">P=8</span>
-                  </TableHead>
-                  <TableHead className="w-20 pr-[25px] pl-4">घंटे</TableHead>
+                  <TableHead className="w-20 px-4 text-center">X</TableHead>
+                  <TableHead className="w-12 px-0 text-center">P</TableHead>
+                  <TableHead className="w-20 px-4 text-center">Y</TableHead>
+                  <TableHead className="w-20 pr-[25px] pl-4">���ंटे</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -419,6 +415,7 @@ export default function AttendanceSubmission() {
                           {entry.formulaX ?? 0}
                         </Button>
                       </TableCell>
+                      <TableCell className="px-0 text-center text-xs text-muted-foreground">P</TableCell>
                       <TableCell className="pl-4">
                         <Button variant="outline" className="w-16 mx-auto" disabled={!entry.isPresent} onClick={() => openFormulaDialog(entry.workerId, "Y")}>
                           {entry.formulaY ?? 0}
