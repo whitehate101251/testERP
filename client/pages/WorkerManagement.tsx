@@ -6,6 +6,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
 import { Users, Plus, Pencil, Trash2 } from "lucide-react";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
 import { ApiResponse, Worker } from "@shared/api";
 
@@ -139,7 +140,7 @@ export default function WorkerManagement() {
                     <Input id="name" required value={form.name} onChange={(e)=>setForm({ ...form, name: e.target.value })} />
                   </div>
                   <div>
-                    <Label htmlFor="fatherName">पिता का नाम</Label>
+                    <Label htmlFor="fatherName">पिता ���ा नाम</Label>
                     <Input id="fatherName" required value={form.fatherName} onChange={(e)=>setForm({ ...form, fatherName: e.target.value })} />
                   </div>
                   <div>
@@ -196,7 +197,14 @@ export default function WorkerManagement() {
                           <TableCell><Input value={editForm.fatherName} onChange={(e)=>setEditForm({...editForm, fatherName: e.target.value})} /></TableCell>
                           <TableCell><Input value={editForm.phone} onChange={(e)=>setEditForm({...editForm, phone: e.target.value})} /></TableCell>
                           <TableCell className="text-right space-x-2">
-                            <Button size="sm" onClick={()=>saveEdit(w.id)}>सेव</Button>
+                            <ConfirmDialog
+                              title="परिवर्तन सहेजें?"
+                              description="क्या आप इस श्रमिक के बदलाव सहेजना चाहते हैं?"
+                              confirmText="सेव करें"
+                              cancelText="रद्द करें"
+                              onConfirm={() => saveEdit(w.id)}
+                              trigger={<Button size="sm">सेव</Button>}
+                            />
                             <Button size="sm" variant="outline" onClick={cancelEdit}>रद्द करें</Button>
                           </TableCell>
                         </>
@@ -211,9 +219,14 @@ export default function WorkerManagement() {
                                 <Button size="sm" variant="outline" className="rounded-xl px-2" onClick={()=>startEdit(w)}>
                                   <Pencil className="h-4 w-4" />
                                 </Button>
-                                <Button size="sm" variant="destructive" className="rounded-xl px-2" onClick={()=>deleteWorker(w.id)}>
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
+                                <ConfirmDialog
+                                  title="श्रमिक हटाएं?"
+                                  description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
+                                  confirmText="हटाएं"
+                                  cancelText="रद्द करें"
+                                  onConfirm={() => deleteWorker(w.id)}
+                                  trigger={<Button size="sm" variant="destructive" className="rounded-xl px-2"><Trash2 className="h-4 w-4" /></Button>}
+                                />
                               </>
                             )}
                           </TableCell>
