@@ -151,12 +151,12 @@ export default function AttendanceSubmission() {
       const draftKey = getDraftKey(new Date(selectedDate));
       const stored = localStorage.getItem(draftKey);
       if (!stored) {
-        toast({ title: "ड्राफ्ट नहीं मिला", description: "इस तारीख क��� लिए कोई सेव ड्राफ्ट उपलब्ध नहीं है" });
+        toast({ title: "ड्राफ्ट नहीं मिला", description: "इस तारीख के लिए कोई सेव ड्राफ्ट उपलब्ध नहीं है" });
         return;
       }
       const parsed: EntryWithFormula[] = JSON.parse(stored);
       setAttendanceEntries(parsed);
-      toast({ title: "ड्राफ्ट लोड हुआ", description: "पिछला सेव ड्राफ्ट लो��� कर दिया गया" });
+      toast({ title: "ड्राफ्ट लोड हुआ", description: "पिछला सेव ड्राफ्ट लोड कर दिया गया" });
     } catch {
       toast({ title: "Error", description: "Failed to load draft", variant: "destructive" });
     }
@@ -388,7 +388,7 @@ export default function AttendanceSubmission() {
                   <TableHead className="w-20 px-4 text-center">X</TableHead>
                   <TableHead className="w-12 px-0 text-center">P</TableHead>
                   <TableHead className="w-20 px-4 text-center">Y</TableHead>
-                  <TableHead className="w-20 pr-[25px] pl-4">���ंटे</TableHead>
+                  <TableHead className="w-20 pr-[25px] pl-4">घंटे</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
