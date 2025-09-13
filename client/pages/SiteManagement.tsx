@@ -5,6 +5,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
 import { Building2, Plus, Pencil, Trash2, Save, X } from "lucide-react";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { ApiResponse, Site, User } from "@shared/api";
 
 export default function SiteManagement() {
@@ -245,7 +246,14 @@ export default function SiteManagement() {
                       <Input placeholder="Username" value={editForm.username} onChange={e=>setEditForm({...editForm, username: e.target.value})} />
                       <Input type="password" placeholder="New Password (optional)" value={editForm.password} onChange={e=>setEditForm({...editForm, password: e.target.value})} />
                       <div className="md:col-span-2 flex gap-2 justify-end">
-                        <Button size="sm" onClick={()=>saveEdit(u.id)}><Save className="h-4 w-4 mr-1"/>Save</Button>
+                        <ConfirmDialog
+                          title="परिवर्तन सहेजें?"
+                          description="क्या आप इस उपयोगकर्ता के बदलाव सहेजना चाहते हैं?"
+                          confirmText="Save"
+                          cancelText="Cancel"
+                          onConfirm={() => saveEdit(u.id)}
+                          trigger={<Button size='sm'><Save className='h-4 w-4 mr-1'/>Save</Button>}
+                        />
                         <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>रद्द करें</Button>
                       </div>
                     </div>
@@ -257,7 +265,14 @@ export default function SiteManagement() {
                       </div>
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline" onClick={()=>startEdit(u)}><Pencil className="h-4 w-4"/></Button>
-                        <Button size="sm" variant="destructive" onClick={()=>deleteUser(u.id)}><Trash2 className="h-4 w-4"/></Button>
+                        <ConfirmDialog
+                          title="उपयोगकर्ता हटाएं?"
+                          description="क्या आप इस उपयोगकर्ता को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
+                          confirmText="Delete"
+                          cancelText="Cancel"
+                          onConfirm={() => deleteUser(u.id)}
+                          trigger={<Button size='sm' variant='destructive'><Trash2 className='h-4 w-4'/></Button>}
+                        />
                       </div>
                     </div>
                   )}
@@ -284,7 +299,14 @@ export default function SiteManagement() {
                       <Input placeholder="Username" value={editForm.username} onChange={e=>setEditForm({...editForm, username: e.target.value})} />
                       <Input type="password" placeholder="New Password (optional)" value={editForm.password} onChange={e=>setEditForm({...editForm, password: e.target.value})} />
                       <div className="md:col-span-2 flex gap-2 justify-end">
-                        <Button size="sm" onClick={()=>saveEdit(u.id)}><Save className="h-4 w-4 mr-1"/>Save</Button>
+                        <ConfirmDialog
+                          title="परिवर्तन सहेजें?"
+                          description="क्या आप इस उपयोगकर्ता के बदलाव सहेजना चाहते हैं?"
+                          confirmText="Save"
+                          cancelText="Cancel"
+                          onConfirm={() => saveEdit(u.id)}
+                          trigger={<Button size='sm'><Save className='h-4 w-4 mr-1'/>Save</Button>}
+                        />
                         <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>रद्द करें</Button>
                       </div>
                     </div>
@@ -296,7 +318,14 @@ export default function SiteManagement() {
                       </div>
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline" onClick={()=>startEdit(u)}><Pencil className="h-4 w-4"/></Button>
-                        <Button size="sm" variant="destructive" onClick={()=>deleteUser(u.id)}><Trash2 className="h-4 w-4"/></Button>
+                        <ConfirmDialog
+                          title="उपयोगकर्ता हटाएं?"
+                          description="क्या आप इस उपयोगकर्ता को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
+                          confirmText="Delete"
+                          cancelText="Cancel"
+                          onConfirm={() => deleteUser(u.id)}
+                          trigger={<Button size='sm' variant='destructive'><Trash2 className='h-4 w-4'/></Button>}
+                        />
                       </div>
                     </div>
                   )}
