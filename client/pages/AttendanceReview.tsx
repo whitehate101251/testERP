@@ -315,13 +315,9 @@ export default function AttendanceReview() {
                                   <TableHead className="w-12">P/A</TableHead>
                                   <TableHead>Worker Name</TableHead>
                                   <TableHead>Designation</TableHead>
-                                  <TableHead className="w-40 relative px-4" colSpan={2}>
-                                    <div className="grid grid-cols-2 place-items-center h-8">
-                                      <span className="text-[13px]">X</span>
-                                      <span className="text-[13px]">Y</span>
-                                    </div>
-                                    <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-xs text-muted-foreground">P=8</span>
-                                  </TableHead>
+                                  <TableHead className="w-20 px-4 text-center">X</TableHead>
+                                  <TableHead className="w-12 px-0 text-center">P</TableHead>
+                                  <TableHead className="w-20 px-4 text-center">Y</TableHead>
                                   <TableHead className="w-20">Total</TableHead>
                                   <TableHead className="min-w-[200px]">Remarks</TableHead>
                                 </TableRow>
@@ -363,6 +359,7 @@ export default function AttendanceReview() {
                                           className="w-20"
                                         />
                                       </TableCell>
+                                      <TableCell className="px-0 text-center text-xs text-muted-foreground">P</TableCell>
                                       <TableCell className="pl-4">
                                         <Input
                                           type="number"
