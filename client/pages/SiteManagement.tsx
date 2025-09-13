@@ -246,7 +246,7 @@ export default function SiteManagement() {
                       <Input type="password" placeholder="New Password (optional)" value={editForm.password} onChange={e=>setEditForm({...editForm, password: e.target.value})} />
                       <div className="md:col-span-2 flex gap-2 justify-end">
                         <Button size="sm" onClick={()=>saveEdit(u.id)}><Save className="h-4 w-4 mr-1"/>Save</Button>
-                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>Cancel</Button>
+                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>रद्द करें</Button>
                       </div>
                     </div>
                   ) : (
@@ -285,7 +285,7 @@ export default function SiteManagement() {
                       <Input type="password" placeholder="New Password (optional)" value={editForm.password} onChange={e=>setEditForm({...editForm, password: e.target.value})} />
                       <div className="md:col-span-2 flex gap-2 justify-end">
                         <Button size="sm" onClick={()=>saveEdit(u.id)}><Save className="h-4 w-4 mr-1"/>Save</Button>
-                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>Cancel</Button>
+                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>रद्द करें</Button>
                       </div>
                     </div>
                   ) : (

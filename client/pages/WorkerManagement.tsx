@@ -197,7 +197,7 @@ export default function WorkerManagement() {
                           <TableCell><Input value={editForm.phone} onChange={(e)=>setEditForm({...editForm, phone: e.target.value})} /></TableCell>
                           <TableCell className="text-right space-x-2">
                             <Button size="sm" onClick={()=>saveEdit(w.id)}>सेव</Button>
-                            <Button size="sm" variant="outline" onClick={cancelEdit}>रद्द</Button>
+                            <Button size="sm" variant="outline" onClick={cancelEdit}>रद्द करें</Button>
                           </TableCell>
                         </>
                       ) : (

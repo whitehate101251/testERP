@@ -84,7 +84,7 @@ export default function Profile() {
               <Input id="username" value={username} onChange={(e)=>setUsername(e.target.value)} />
             </div>
             <div className="flex justify-end">
-              <Button type="submit">सेव क���ें</Button>
+              <Button type="submit">सेव करें</Button>
             </div>
           </form>
         </CardContent>
