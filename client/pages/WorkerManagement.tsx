@@ -160,8 +160,8 @@ export default function WorkerManagement() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">श्रमिक जोड़ें</h1>
-        <p className="text-gray-600">श्रमिक विवरण जोड़ें/संपादित करें</p>
+        <h1 className="text-2xl font-bold text-gray-900">{isAdmin ? 'Manage Workers' : 'श्रमिक जोड़ें'}</h1>
+        <p className="text-gray-600">{isAdmin ? 'Browse sites and foremen to manage workers' : 'श्रमिक विवरण ज���ड़ें/संपादित करें'}</p>
       </div>
 
       {isForeman && (
@@ -264,7 +264,7 @@ export default function WorkerManagement() {
                                   title="श्रमिक हटाएं?"
                                   description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
                                   confirmText="हटाएं"
-                                  cancelText="��द्द करें"
+                                  cancelText="रद्द करें"
                                   onConfirm={() => deleteWorker(w.id)}
                                   trigger={<Button size="sm" variant="destructive" className="rounded-xl px-2"><Trash2 className="h-4 w-4" /></Button>}
                                 />
