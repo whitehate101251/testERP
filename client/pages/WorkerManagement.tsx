@@ -278,7 +278,7 @@ export default function WorkerManagement() {
                               onConfirm={() => saveEdit(w.id)}
                               trigger={<Button size="sm">{isAdmin ? 'Save' : 'सेव'}</Button>}
                             />
-                            <Button size="sm" variant="outline" onClick={cancelEdit}>रद्द करें</Button>
+                            <Button size="sm" variant="outline" onClick={cancelEdit}>{isAdmin ? 'Cancel' : 'रद्द करें'}</Button>
                           </TableCell>
                         </>
                       ) : (
