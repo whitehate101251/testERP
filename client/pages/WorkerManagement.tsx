@@ -185,7 +185,7 @@ export default function WorkerManagement() {
                     <Input id="fatherName" required value={form.fatherName} onChange={(e)=>setForm({ ...form, fatherName: e.target.value })} />
                   </div>
                   <div>
-                    <Label htmlFor="designation">पद (वैकल्पिक)</Label>
+                    <Label htmlFor="designation">पद (���ैकल्पिक)</Label>
                     <Input id="designation" placeholder="उदा. Mason, Helper" value={form.designation} onChange={(e)=>setForm({ ...form, designation: e.target.value })} />
                   </div>
                   <div>
@@ -255,10 +255,10 @@ export default function WorkerManagement() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>नाम</TableHead>
-                    <TableHead>पिता का नाम</TableHead>
-                    <TableHead>फोन</TableHead>
-                    <TableHead className="w-40 text-right">एक्शन</TableHead>
+                    <TableHead>{isAdmin ? 'Name' : 'नाम'}</TableHead>
+                    <TableHead>{isAdmin ? "Father's Name" : 'पिता का नाम'}</TableHead>
+                    <TableHead>{isAdmin ? 'Phone' : 'फोन'}</TableHead>
+                    <TableHead className="w-40 text-right">{isAdmin ? 'Actions' : 'एक्शन'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -276,7 +276,7 @@ export default function WorkerManagement() {
                               confirmText="सेव करें"
                               cancelText="रद्द करें"
                               onConfirm={() => saveEdit(w.id)}
-                              trigger={<Button size="sm">सेव</Button>}
+                              trigger={<Button size="sm">���ेव</Button>}
                             />
                             <Button size="sm" variant="outline" onClick={cancelEdit}>रद्द करें</Button>
                           </TableCell>
@@ -285,7 +285,7 @@ export default function WorkerManagement() {
                         <>
                           <TableCell className="font-medium">{w.name}</TableCell>
                           <TableCell>{w.fatherName}</TableCell>
-                          <TableCell>{w.phone || "उपलब्ध ���हीं"}</TableCell>
+                          <TableCell>{w.phone || "उपलब्ध नहीं"}</TableCell>
                           <TableCell className="text-right space-x-3">
                             {isForeman && (
                               <>
