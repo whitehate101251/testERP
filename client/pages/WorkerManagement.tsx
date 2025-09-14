@@ -161,7 +161,7 @@ export default function WorkerManagement() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">{isAdmin ? 'Manage Workers' : 'श्रमिक जोड़ें'}</h1>
-        <p className="text-gray-600">{isAdmin ? 'Browse sites and foremen to manage workers' : 'श्रमिक विवरण ज���ड़ें/संपादित करें'}</p>
+        <p className="text-gray-600">{isAdmin ? 'Browse sites and foremen to manage workers' : 'श्रमिक विवरण जोड़ें/संपादित करें'}</p>
       </div>
 
       {isForeman && (
@@ -202,6 +202,38 @@ export default function WorkerManagement() {
                 </form>
               </DialogContent>
             </Dialog>
+          </CardContent>
+        </Card>
+      )}
+
+      {isAdmin && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Building2 className="h-5 w-5"/> Sites</CardTitle>
+            <CardDescription>Select a foreman to view site workers</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {sites.map(site => {
+                const incharge = usersList.find(u => u.id === site.inchargeId);
+                const foremen = usersList.filter(u => u.role === 'foreman' && u.siteId === site.id);
+                return (
+                  <div key={site.id} className="border rounded-md p-3">
+                    <div className="font-medium flex items-center gap-2">{site.name} <span className="text-sm text-gray-500">({site.location})</span></div>
+                    <div className="text-sm text-gray-600 mt-1">Incharge: {incharge?.name || '-'}</div>
+                    <div className="mt-2 space-y-1">
+                      {foremen.length === 0 ? (
+                        <div className="text-sm text-gray-500">No foremen</div>
+                      ) : foremen.map(f => (
+                        <button key={f.id} onClick={()=>{ setSelectedForemanId(f.id); setSelectedSiteId(site.id); }} className={`w-full text-left px-2 py-1 rounded hover:bg-gray-100 ${selectedForemanId===f.id ? 'bg-gray-100' : ''}`}>
+                          <div className="flex items-center gap-2"><ChevronRight className="h-3 w-3"/> {f.name} <span className="text-xs text-gray-500">(@{f.username})</span></div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </CardContent>
         </Card>
       )}
