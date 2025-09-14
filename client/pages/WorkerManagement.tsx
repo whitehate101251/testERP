@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../co
 import { Users, Plus, Pencil, Trash2 } from "lucide-react";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
-import { ApiResponse, Worker } from "@shared/api";
+import { ApiResponse, Worker, Site, User } from "@shared/api";
 
 export default function WorkerManagement() {
   const { user } = useAuth();
