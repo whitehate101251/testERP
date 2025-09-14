@@ -34,6 +34,7 @@ export default function WorkerManagement() {
   useEffect(() => {
     if (didFetchRef.current) return;
     didFetchRef.current = true;
+    if (!isForeman) return;
     const loadWorkers = async () => {
       if (!user?.siteId) return;
       try {
@@ -48,7 +49,7 @@ export default function WorkerManagement() {
       }
     };
     loadWorkers();
-  }, [user?.siteId]);
+  }, [user?.siteId, isForeman]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -226,8 +227,8 @@ export default function WorkerManagement() {
                                 </Button>
                                 <ConfirmDialog
                                   title="श्रमिक हटाएं?"
-                                  description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नही�� ली जा सकती।"
-                                  confirmText="हटाएं"
+                                  description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
+                                  confirmText="���टाएं"
                                   cancelText="रद्द करें"
                                   onConfirm={() => deleteWorker(w.id)}
                                   trigger={<Button size="sm" variant="destructive" className="rounded-xl px-2"><Trash2 className="h-4 w-4" /></Button>}
