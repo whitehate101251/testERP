@@ -51,6 +51,41 @@ export default function WorkerManagement() {
     loadWorkers();
   }, [user?.siteId, isForeman]);
 
+  useEffect(() => {
+    if (!isAdmin) return;
+    const token = localStorage.getItem("auth_token");
+    const load = async () => {
+      setLoading(true);
+      try {
+        const [u, s] = await Promise.all([
+          fetch("/api/admin/users", { headers: token ? { Authorization: `Bearer ${token}` } : {} }).then(r=>r.json()) as Promise<ApiResponse<User[]>>,
+          fetch("/api/sites").then(r=>r.json()) as Promise<ApiResponse<Site[]>>,
+        ]);
+        if (u.success && u.data) setUsersList(u.data);
+        if (s.success && s.data) setSites(s.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [isAdmin]);
+
+  useEffect(() => {
+    if (!isAdmin || !selectedSiteId) return;
+    const token = localStorage.getItem("auth_token");
+    const loadWorkers = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/workers/site/${selectedSiteId}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+        const data: ApiResponse<Worker[]> = await res.json();
+        if (data.success && data.data) setWorkers(data.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadWorkers();
+  }, [isAdmin, selectedSiteId]);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isForeman) return;
@@ -228,8 +263,8 @@ export default function WorkerManagement() {
                                 <ConfirmDialog
                                   title="श्रमिक हटाएं?"
                                   description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
-                                  confirmText="���टाएं"
-                                  cancelText="रद्द करें"
+                                  confirmText="हटाएं"
+                                  cancelText="��द्द करें"
                                   onConfirm={() => deleteWorker(w.id)}
                                   trigger={<Button size="sm" variant="destructive" className="rounded-xl px-2"><Trash2 className="h-4 w-4" /></Button>}
                                 />
