@@ -271,12 +271,12 @@ export default function WorkerManagement() {
                           <TableCell><Input value={editForm.phone} onChange={(e)=>setEditForm({...editForm, phone: e.target.value})} /></TableCell>
                           <TableCell className="text-right space-x-2">
                             <ConfirmDialog
-                              title="परिवर्तन सहेजें?"
-                              description="क्या आप इस श्रमिक के बदलाव सहेजना चाहते हैं?"
-                              confirmText="सेव करें"
-                              cancelText="रद्द करें"
+                              title={isAdmin ? 'Save changes?' : 'परिवर्तन सहेजें?'}
+                              description={isAdmin ? 'Do you want to save changes for this worker?' : 'क्या आप इस श्रमिक के बदलाव सहेजना चाहते हैं?'}
+                              confirmText={isAdmin ? 'Save' : 'सेव करें'}
+                              cancelText={isAdmin ? 'Cancel' : 'रद्द करें'}
                               onConfirm={() => saveEdit(w.id)}
-                              trigger={<Button size="sm">सेव</Button>}
+                              trigger={<Button size="sm">{isAdmin ? 'Save' : 'सेव'}</Button>}
                             />
                             <Button size="sm" variant="outline" onClick={cancelEdit}>रद्द करें</Button>
                           </TableCell>
