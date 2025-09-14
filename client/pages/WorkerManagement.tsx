@@ -293,10 +293,10 @@ export default function WorkerManagement() {
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                                 <ConfirmDialog
-                                  title="श्रमिक हटाएं?"
-                                  description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
-                                  confirmText="हटाएं"
-                                  cancelText="रद्द करें"
+                                  title={isAdmin ? 'Delete worker?' : 'श्रमिक हटाएं?'}
+                                  description={isAdmin ? 'Are you sure you want to delete this worker? This action cannot be undone.' : 'क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।'}
+                                  confirmText={isAdmin ? 'Delete' : 'हटाएं'}
+                                  cancelText={isAdmin ? 'Cancel' : 'रद्द करें'}
                                   onConfirm={() => deleteWorker(w.id)}
                                   trigger={<Button size="sm" variant="destructive" className="rounded-xl px-2"><Trash2 className="h-4 w-4" /></Button>}
                                 />
