@@ -13,6 +13,10 @@ import { ApiResponse, Worker, Site, User } from "@shared/api";
 export default function WorkerManagement() {
   const { user } = useAuth();
   const [workers, setWorkers] = useState<Worker[]>([]);
+  const [sites, setSites] = useState<Site[]>([]);
+  const [usersList, setUsersList] = useState<User[]>([]);
+  const [selectedForemanId, setSelectedForemanId] = useState<string | null>(null);
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ name: "", fatherName: "", designation: "", dailyWage: "", phone: "", aadhar: "" });
@@ -199,7 +203,7 @@ export default function WorkerManagement() {
                           <TableCell className="text-right space-x-2">
                             <ConfirmDialog
                               title="परिवर्तन सहेजें?"
-                              description="क्या आप इस श्रमिक के बदलाव सहेजना चाहते हैं?"
+                              description="क्या आप इस श्रमिक के बदलाव सहेजना च���हते हैं?"
                               confirmText="सेव करें"
                               cancelText="रद्द करें"
                               onConfirm={() => saveEdit(w.id)}
@@ -220,7 +224,7 @@ export default function WorkerManagement() {
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                                 <ConfirmDialog
-                                  title="श्रमिक हटाएं?"
+                                  title="श्रमि�� हटाएं?"
                                   description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
                                   confirmText="हटाएं"
                                   cancelText="रद्द करें"
