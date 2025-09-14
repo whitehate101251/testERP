@@ -274,7 +274,7 @@ export default function WorkerManagement() {
                               title={isAdmin ? 'Save changes?' : 'परिवर्तन सहेजें?'}
                               description={isAdmin ? 'Do you want to save changes for this worker?' : 'क्या आप इस श्रमिक के बदलाव सहेजना चाहते हैं?'}
                               confirmText={isAdmin ? 'Save' : 'सेव करें'}
-                              cancelText={isAdmin ? 'Cancel' : 'रद्द करें'}
+                              cancelText={isAdmin ? 'Cancel' : 'रद्द कर���ं'}
                               onConfirm={() => saveEdit(w.id)}
                               trigger={<Button size="sm">{isAdmin ? 'Save' : 'सेव'}</Button>}
                             />
@@ -287,7 +287,7 @@ export default function WorkerManagement() {
                           <TableCell>{w.fatherName}</TableCell>
                           <TableCell>{isAdmin ? (w.phone || 'N/A') : (w.phone || 'उपलब्ध नहीं')}</TableCell>
                           <TableCell className="text-right space-x-3">
-                            {isForeman && (
+                            {(isForeman || isAdmin) && (
                               <>
                                 <Button size="sm" variant="outline" className="rounded-xl px-2" onClick={()=>startEdit(w)}>
                                   <Pencil className="h-4 w-4" />
