@@ -241,7 +241,7 @@ export default function WorkerManagement() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" /> श्रमिक सूची
+            <Users className="h-5 w-5" /> {isAdmin ? 'Workers List' : 'श्रमिक सूची'}
           </CardTitle>
           <CardDescription>आपकी साइट के श्रमिक</CardDescription>
         </CardHeader>
