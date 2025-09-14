@@ -28,6 +28,7 @@ export default function WorkerManagement() {
     aadhar: "",
   });
   const isForeman = user?.role === "foreman";
+  const isAdmin = user?.role === "admin";
 
   const didFetchRef = useRef(false);
   useEffect(() => {
@@ -203,7 +204,7 @@ export default function WorkerManagement() {
                           <TableCell className="text-right space-x-2">
                             <ConfirmDialog
                               title="परिवर्तन सहेजें?"
-                              description="क्या आप इस श्रमिक के बदलाव सहेजना च���हते हैं?"
+                              description="क्या आप इस श्रमिक के बदलाव सहेजना चाहते हैं?"
                               confirmText="सेव करें"
                               cancelText="रद्द करें"
                               onConfirm={() => saveEdit(w.id)}
@@ -224,8 +225,8 @@ export default function WorkerManagement() {
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                                 <ConfirmDialog
-                                  title="श्रमि�� हटाएं?"
-                                  description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
+                                  title="श्रमिक हटाएं?"
+                                  description="क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नही�� ली जा सकती।"
                                   confirmText="हटाएं"
                                   cancelText="रद्द करें"
                                   onConfirm={() => deleteWorker(w.id)}
