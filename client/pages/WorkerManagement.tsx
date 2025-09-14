@@ -243,7 +243,7 @@ export default function WorkerManagement() {
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" /> {isAdmin ? 'Workers List' : 'श्रमिक सूची'}
           </CardTitle>
-          <CardDescription>आपकी साइट के श्रमिक</CardDescription>
+          <CardDescription>{isAdmin ? 'Workers for selected foreman’s site' : 'आपकी साइट के श्रमिक'}</CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -285,7 +285,7 @@ export default function WorkerManagement() {
                         <>
                           <TableCell className="font-medium">{w.name}</TableCell>
                           <TableCell>{w.fatherName}</TableCell>
-                          <TableCell>{w.phone || "उपलब्ध नहीं"}</TableCell>
+                          <TableCell>{w.phone || "उपलब्ध ���हीं"}</TableCell>
                           <TableCell className="text-right space-x-3">
                             {isForeman && (
                               <>
