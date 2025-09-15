@@ -102,6 +102,12 @@ export default function Layout({ children }: LayoutProps) {
           href: "/sites",
           icon: Settings,
           roles: ["admin"],
+        },
+        {
+          label: "Sites",
+          href: "/sites/overview",
+          icon: Building2,
+          roles: ["admin"],
         }
       );
     }
