@@ -2,7 +2,7 @@
 export interface User {
   id: string;
   username: string;
-  role: 'foreman' | 'site_incharge' | 'admin';
+  role: "foreman" | "site_incharge" | "admin";
   name: string;
   email?: string;
   siteId?: string;
@@ -58,7 +58,7 @@ export interface AttendanceRecord {
   foremanId: string;
   foremanName: string;
   entries: AttendanceEntry[];
-  status: 'submitted' | 'incharge_reviewed' | 'admin_approved' | 'rejected';
+  status: "submitted" | "incharge_reviewed" | "admin_approved" | "rejected";
   submittedAt: Date;
   reviewedAt?: Date;
   approvedAt?: Date;
@@ -83,10 +83,10 @@ export interface Site {
 }
 
 // Admin/User management
-export type UserRole = 'foreman' | 'site_incharge' | 'admin';
+export type UserRole = "foreman" | "site_incharge" | "admin";
 
 export interface CreateUserRequest {
-  role: Exclude<UserRole, 'admin'>; // admin creates only foreman or site_incharge
+  role: Exclude<UserRole, "admin">; // admin creates only foreman or site_incharge
   name: string;
   fatherName?: string;
   username: string;
