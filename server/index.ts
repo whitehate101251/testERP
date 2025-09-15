@@ -64,6 +64,7 @@ export function createServer() {
   app.post("/api/attendance/admin-approve/:id", handleAdminApprove);
   app.get("/api/attendance/approved", handleApprovedRecords);
   app.get("/api/attendance/check/:date", handleCheckSubmission);
+  app.get("/api/attendance/foreman/:foremanId", handleAttendanceByForeman);
 
   // Workers
   app.get("/api/workers/site/:siteId", handleGetWorkers);
