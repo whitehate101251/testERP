@@ -17,7 +17,8 @@ import {
   handlePendingAdmin,
   handleAdminApprove,
   handleApprovedRecords,
-  handleCheckSubmission
+  handleCheckSubmission,
+  handleAttendanceByForeman
 } from "./routes/attendance.js";
 import { handleGetWorkers, handleCreateWorker, handleUpdateWorker, handleDeleteWorker } from "./routes/workers.js";
 
