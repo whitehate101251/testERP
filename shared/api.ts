@@ -32,6 +32,7 @@ export interface Worker {
   designation: string;
   dailyWage: number;
   siteId: string;
+  assignedForemanId?: string;
   phone?: string;
   aadhar?: string;
 }
