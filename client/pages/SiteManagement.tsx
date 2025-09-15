@@ -247,14 +247,14 @@ export default function SiteManagement() {
                       <Input type="password" placeholder="New Password (optional)" value={editForm.password} onChange={e=>setEditForm({...editForm, password: e.target.value})} />
                       <div className="md:col-span-2 flex gap-2 justify-end">
                         <ConfirmDialog
-                          title="परिवर्तन सहेजें?"
-                          description="क्या आप इस उपयोगकर्ता के बदलाव सहेजना चाहते हैं?"
+                          title="Save changes?"
+                          description="Do you want to save changes for this user?"
                           confirmText="Save"
                           cancelText="Cancel"
                           onConfirm={() => saveEdit(u.id)}
                           trigger={<Button size='sm'><Save className='h-4 w-4 mr-1'/>Save</Button>}
                         />
-                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>रद्द करें</Button>
+                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>Cancel</Button>
                       </div>
                     </div>
                   ) : (
@@ -266,8 +266,8 @@ export default function SiteManagement() {
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline" onClick={()=>startEdit(u)}><Pencil className="h-4 w-4"/></Button>
                         <ConfirmDialog
-                          title="उपयोगकर्ता हटाएं?"
-                          description="क्या आप इस उपयोगकर्ता को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
+                          title="Delete user?"
+                          description="Are you sure you want to delete this user? This action cannot be undone."
                           confirmText="Delete"
                           cancelText="Cancel"
                           onConfirm={() => deleteUser(u.id)}
@@ -300,14 +300,14 @@ export default function SiteManagement() {
                       <Input type="password" placeholder="New Password (optional)" value={editForm.password} onChange={e=>setEditForm({...editForm, password: e.target.value})} />
                       <div className="md:col-span-2 flex gap-2 justify-end">
                         <ConfirmDialog
-                          title="परिवर्तन सहेजें?"
-                          description="क्या आप इस उपयोगकर्ता के बदलाव सहेजना चाहते हैं?"
+                          title="Save changes?"
+                          description="Do you want to save changes for this user?"
                           confirmText="Save"
                           cancelText="Cancel"
                           onConfirm={() => saveEdit(u.id)}
                           trigger={<Button size='sm'><Save className='h-4 w-4 mr-1'/>Save</Button>}
                         />
-                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>रद्द करें</Button>
+                        <Button size="sm" variant="outline" onClick={cancelEdit}><X className="h-4 w-4 mr-1"/>Cancel</Button>
                       </div>
                     </div>
                   ) : (
@@ -319,8 +319,8 @@ export default function SiteManagement() {
                       <div className="flex gap-2">
                         <Button size="sm" variant="outline" onClick={()=>startEdit(u)}><Pencil className="h-4 w-4"/></Button>
                         <ConfirmDialog
-                          title="उपयोगकर्ता हटाएं?"
-                          description="क्या आप इस उपयोगकर्ता को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।"
+                          title="Delete user?"
+                          description="Are you sure you want to delete this user? This action cannot be undone."
                           confirmText="Delete"
                           cancelText="Cancel"
                           onConfirm={() => deleteUser(u.id)}
