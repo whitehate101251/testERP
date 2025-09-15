@@ -376,3 +376,41 @@ export const handleApprovedRecords: RequestHandler = (req, res) => {
     res.status(500).json(response);
   }
 };
+
+export const handleAttendanceByForeman: RequestHandler = (req, res) => {
+  try {
+    const user = getUserFromToken(req.headers.authorization);
+
+    if (!user || user.role !== 'admin') {
+      const response: ApiResponse = {
+        success: false,
+        message: "Unauthorized - Only admins can access this",
+      };
+      return res.status(401).json(response);
+    }
+
+    const { foremanId } = req.params as { foremanId: string };
+
+    const records = database.attendanceRecords
+      .filter(r => r.foremanId === foremanId)
+      .map(r => ({
+        ...r,
+        foremanName: database.users.find(u => u.id === r.foremanId)?.name || r.foremanName,
+      }))
+      .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime());
+
+    const response: ApiResponse<AttendanceRecord[]> = {
+      success: true,
+      data: records,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Attendance by foreman error:", error);
+    const response: ApiResponse = {
+      success: false,
+      message: "Internal server error",
+    };
+    res.status(500).json(response);
+  }
+};
