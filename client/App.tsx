@@ -8,6 +8,7 @@ import AttendanceReview from "./pages/AttendanceReview";
 import AdminApproval from "./pages/AdminApproval";
 import WorkerManagement from "./pages/WorkerManagement";
 import SiteManagement from "./pages/SiteManagement";
+import Sites from "./pages/Sites";
 import Layout from "./components/Layout";
 import { Toaster } from "./components/ui/toaster";
 import Profile from "./pages/Profile";
@@ -143,6 +144,12 @@ function App() {
           <Route path="/sites" element={
             <ProtectedRoute requiredRole={['admin']}>
               <SiteManagement />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/sites/overview" element={
+            <ProtectedRoute requiredRole={['admin']}>
+              <Sites />
             </ProtectedRoute>
           } />
           
