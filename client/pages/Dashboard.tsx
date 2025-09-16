@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentAttendance, setRecentAttendance] = useState<AttendanceRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const isAdmin = user?.role === 'admin';
 
   const didFetchRef = useRef(false);
   useEffect(() => {
@@ -72,11 +73,16 @@ export default function Dashboard() {
   };
 
   const getStatusBadge = (status: string) => {
-    const statusConfig = {
+    const statusConfig = isAdmin ? {
       submitted: { label: "Submitted", variant: "secondary" as const },
       incharge_reviewed: { label: "Reviewed", variant: "default" as const },
       admin_approved: { label: "Approved", variant: "default" as const },
       rejected: { label: "Rejected", variant: "destructive" as const },
+    } : {
+      submitted: { label: "जमा", variant: "secondary" as const },
+      incharge_reviewed: { label: "समीक्षित", variant: "default" as const },
+      admin_approved: { label: "स्वीकृत", variant: "default" as const },
+      rejected: { label: "अस्वीकृत", variant: "destructive" as const },
     };
 
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.submitted;
@@ -91,7 +97,7 @@ export default function Dashboard() {
             <Link to="/attendance/submit">
               <Button size="lg" className="w-full">
                 <ClipboardList className="mr-2 h-5 w-5" />
-                Submit Today's Attendance
+                आज की हाज़िरी जमा करें
               </Button>
             </Link>
           </div>
@@ -103,13 +109,13 @@ export default function Dashboard() {
             <Link to="/attendance/review">
               <Button size="lg" className="w-full">
                 <CheckSquare className="mr-2 h-5 w-5" />
-                Review Pending Attendance
+                लंबित हाज़िरी की समीक्षा करें
               </Button>
             </Link>
             <Link to="/workers">
               <Button variant="outline" size="lg" className="w-full">
                 <Users className="mr-2 h-5 w-5" />
-                Manage Workers
+                श्रमिक प्रबंधन
               </Button>
             </Link>
           </div>
@@ -149,7 +155,7 @@ export default function Dashboard() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-lg">Loading dashboard...</div>
+        <div className="text-lg">{isAdmin ? 'Loading dashboard...' : 'डैशबोर्ड लोड हो रहा है...'}</div>
       </div>
     );
   }
@@ -159,16 +165,16 @@ export default function Dashboard() {
       {/* Welcome Header */}
       <div className="bg-white rounded-lg shadow-sm p-6 border">
         <h1 className="text-2xl font-bold text-gray-900">
-          Welcome back, {user?.name}!
+          {isAdmin ? `Welcome back, ${user?.name}!` : `वापसी पर स्वागत है, ${user?.name}!`}
         </h1>
       </div>
 
       {/* Stats Cards */}
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Sites</CardTitle>
+              <CardTitle className="text-sm font-medium">{isAdmin ? 'Total Sites' : 'कुल साइटें'}</CardTitle>
               <Building2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -178,7 +184,7 @@ export default function Dashboard() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Workers</CardTitle>
+              <CardTitle className="text-sm font-medium">{isAdmin ? 'Total Workers' : 'कुल श्रमिक'}</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -188,7 +194,7 @@ export default function Dashboard() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pending Approvals</CardTitle>
+              <CardTitle className="text-sm font-medium">{isAdmin ? 'Pending Approvals' : 'लंबित स्वीकृतियाँ'}</CardTitle>
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -196,15 +202,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Today's Attendance</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stats.todayAttendance}</div>
-            </CardContent>
-          </Card>
         </div>
       )}
 
@@ -212,8 +209,8 @@ export default function Dashboard() {
         {/* Quick Actions */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks for your role</CardDescription>
+            <CardTitle>{isAdmin ? 'Quick Actions' : 'तुरंत क्रियाएँ'}</CardTitle>
+            <CardDescription>{isAdmin ? 'Common tasks for your role' : 'आपकी भूमिका के सामान्य कार्य'}</CardDescription>
           </CardHeader>
           <CardContent>{getQuickActions()}</CardContent>
         </Card>
@@ -221,8 +218,8 @@ export default function Dashboard() {
         {/* Recent Attendance */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Recent Attendance Records</CardTitle>
-            <CardDescription>Latest attendance submissions and their status</CardDescription>
+            <CardTitle>{isAdmin ? 'Recent Attendance Records' : 'हाल की हाज़िरी रिकॉर्ड'}</CardTitle>
+            <CardDescription>{isAdmin ? 'Latest attendance submissions and their status' : 'नवीनतम जमा की गई हाज़िरी और उनकी स्थिति'}</CardDescription>
           </CardHeader>
           <CardContent>
             {recentAttendance.length > 0 ? (
@@ -235,10 +232,10 @@ export default function Dashboard() {
                     <div className="flex-1">
                       <h4 className="font-medium">{record.siteName}</h4>
                       <p className="text-sm text-gray-600">
-                        By {record.foremanName} • {new Date(record.date).toLocaleDateString()}
+                        {isAdmin ? `By ${record.foremanName} • ${new Date(record.date).toLocaleDateString()}` : `द्वारा ${record.foremanName} • ${new Date(record.date).toLocaleDateString()}`}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {record.presentWorkers}/{record.totalWorkers} workers present
+                        {isAdmin ? `${record.presentWorkers}/${record.totalWorkers} workers present` : `${record.presentWorkers}/${record.totalWorkers} श्रमिक उपस्थित`}
                       </p>
                     </div>
                     <div className="text-right">
@@ -249,7 +246,7 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="text-center py-8 text-gray-500">
-                No recent attendance records found
+                {isAdmin ? 'No recent attendance records found' : 'कोई हाल की हाज़िरी रिकॉर्ड नहीं मिला'}
               </div>
             )}
           </CardContent>

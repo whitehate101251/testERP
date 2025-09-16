@@ -6,9 +6,23 @@ import { dirname, resolve } from "path";
 import dotenv from "dotenv";
 
 // Import route handlers
-import { handleLogin, handleUserAuth, handleChangePassword } from "./routes/auth.js";
-import { handleDashboardStats, handleRecentAttendance } from "./routes/dashboard.js";
-import { handleCreateUser, handleListUsers, handleUpdateUser, handleDeleteUser, handleCreateSite, handleListSites } from "./routes/admin.js";
+import {
+  handleLogin,
+  handleUserAuth,
+  handleChangePassword,
+} from "./routes/auth.js";
+import {
+  handleDashboardStats,
+  handleRecentAttendance,
+} from "./routes/dashboard.js";
+import {
+  handleCreateUser,
+  handleListUsers,
+  handleUpdateUser,
+  handleDeleteUser,
+  handleCreateSite,
+  handleListSites,
+} from "./routes/admin.js";
 import {
   handleSubmitAttendance,
   handleSaveDraft,
@@ -17,9 +31,15 @@ import {
   handlePendingAdmin,
   handleAdminApprove,
   handleApprovedRecords,
-  handleCheckSubmission
+  handleCheckSubmission,
+  handleAttendanceByForeman,
 } from "./routes/attendance.js";
-import { handleGetWorkers, handleCreateWorker, handleUpdateWorker, handleDeleteWorker } from "./routes/workers.js";
+import {
+  handleGetWorkers,
+  handleCreateWorker,
+  handleUpdateWorker,
+  handleDeleteWorker,
+} from "./routes/workers.js";
 
 dotenv.config();
 
@@ -36,7 +56,7 @@ export function createServer() {
   app.use(express.json());
 
   // API Routes
-  
+
   // Authentication
   app.post("/api/auth/login", handleLogin);
   app.get("/api/auth/user", handleUserAuth);
@@ -63,6 +83,7 @@ export function createServer() {
   app.post("/api/attendance/admin-approve/:id", handleAdminApprove);
   app.get("/api/attendance/approved", handleApprovedRecords);
   app.get("/api/attendance/check/:date", handleCheckSubmission);
+  app.get("/api/attendance/foreman/:foremanId", handleAttendanceByForeman);
 
   // Workers
   app.get("/api/workers/site/:siteId", handleGetWorkers);
@@ -80,7 +101,7 @@ async function startServer() {
   // Production: serve static files
   if (isProduction) {
     app.use(express.static(resolve(__dirname, "../spa")));
-    
+
     app.get("*", (req, res) => {
       res.sendFile(resolve(__dirname, "../spa/index.html"));
     });

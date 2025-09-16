@@ -5,13 +5,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../components/ui/card";
-import { Users, Plus } from "lucide-react";
+import { Users, Plus, Pencil, Trash2, Building2, ChevronRight, Shield } from "lucide-react";
+import ConfirmDialog from "../components/ConfirmDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../components/ui/table";
-import { ApiResponse, Worker } from "@shared/api";
+import { ApiResponse, Worker, Site, User } from "@shared/api";
 
 export default function WorkerManagement() {
   const { user } = useAuth();
   const [workers, setWorkers] = useState<Worker[]>([]);
+  const [sites, setSites] = useState<Site[]>([]);
+  const [usersList, setUsersList] = useState<User[]>([]);
+  const [selectedForemanId, setSelectedForemanId] = useState<string | null>(null);
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ name: "", fatherName: "", designation: "", dailyWage: "", phone: "", aadhar: "" });
@@ -23,11 +28,13 @@ export default function WorkerManagement() {
     aadhar: "",
   });
   const isForeman = user?.role === "foreman";
+  const isAdmin = user?.role === "admin";
 
   const didFetchRef = useRef(false);
   useEffect(() => {
     if (didFetchRef.current) return;
     didFetchRef.current = true;
+    if (!isForeman) return;
     const loadWorkers = async () => {
       if (!user?.siteId) return;
       try {
@@ -42,7 +49,42 @@ export default function WorkerManagement() {
       }
     };
     loadWorkers();
-  }, [user?.siteId]);
+  }, [user?.siteId, isForeman]);
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    const token = localStorage.getItem("auth_token");
+    const load = async () => {
+      setLoading(true);
+      try {
+        const [u, s] = await Promise.all([
+          fetch("/api/admin/users", { headers: token ? { Authorization: `Bearer ${token}` } : {} }).then(r=>r.json()) as Promise<ApiResponse<User[]>>,
+          fetch("/api/sites").then(r=>r.json()) as Promise<ApiResponse<Site[]>>,
+        ]);
+        if (u.success && u.data) setUsersList(u.data);
+        if (s.success && s.data) setSites(s.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [isAdmin]);
+
+  useEffect(() => {
+    if (!isAdmin || !selectedSiteId) return;
+    const token = localStorage.getItem("auth_token");
+    const loadWorkers = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/workers/site/${selectedSiteId}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+        const data: ApiResponse<Worker[]> = await res.json();
+        if (data.success && data.data) setWorkers(data.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadWorkers();
+  }, [isAdmin, selectedSiteId]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,8 +160,8 @@ export default function WorkerManagement() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">श्रमिक जोड़ें</h1>
-        <p className="text-gray-600">श्रमिक विवरण जोड़ें/संपादित करें</p>
+        <h1 className="text-2xl font-bold text-gray-900">{isAdmin ? 'Manage Workers' : 'श्रमिक जोड़ें'}</h1>
+        <p className="text-gray-600">{isAdmin ? 'Browse sites and foremen to manage workers' : 'श्रमिक विवरण जोड़ें/संपादित करें'}</p>
       </div>
 
       {isForeman && (
@@ -139,7 +181,7 @@ export default function WorkerManagement() {
                     <Input id="name" required value={form.name} onChange={(e)=>setForm({ ...form, name: e.target.value })} />
                   </div>
                   <div>
-                    <Label htmlFor="fatherName">पिता का नाम</Label>
+                    <Label htmlFor="fatherName">पिता ���ा नाम</Label>
                     <Input id="fatherName" required value={form.fatherName} onChange={(e)=>setForm({ ...form, fatherName: e.target.value })} />
                   </div>
                   <div>
@@ -164,12 +206,44 @@ export default function WorkerManagement() {
         </Card>
       )}
 
+      {isAdmin && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Building2 className="h-5 w-5"/> Sites</CardTitle>
+            <CardDescription>Select a foreman to view site workers</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {sites.map(site => {
+                const incharge = usersList.find(u => u.id === site.inchargeId);
+                const foremen = usersList.filter(u => u.role === 'foreman' && u.siteId === site.id);
+                return (
+                  <div key={site.id} className="border rounded-md p-3">
+                    <div className="font-medium flex items-center gap-2">{site.name} <span className="text-sm text-gray-500">({site.location})</span></div>
+                    <div className="text-sm text-gray-600 mt-1">Incharge: {incharge?.name || '-'}</div>
+                    <div className="mt-2 space-y-1">
+                      {foremen.length === 0 ? (
+                        <div className="text-sm text-gray-500">No foremen</div>
+                      ) : foremen.map(f => (
+                        <button key={f.id} onClick={()=>{ setSelectedForemanId(f.id); setSelectedSiteId(site.id); }} className={`w-full text-left px-2 py-1 rounded hover:bg-gray-100 ${selectedForemanId===f.id ? 'bg-gray-100' : ''}`}>
+                          <div className="flex items-center gap-2"><ChevronRight className="h-3 w-3"/> {f.name} <span className="text-xs text-gray-500">(@{f.username})</span></div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" /> श्रमिक सूची
+            <Users className="h-5 w-5" /> {isAdmin ? 'Workers List' : 'श्रमिक सूची'}
           </CardTitle>
-          <CardDescription>आपकी साइट के श्रमिक</CardDescription>
+          <CardDescription>{isAdmin ? 'Workers for selected foreman’s site' : 'आपकी साइट के श्रमिक'}</CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -181,10 +255,10 @@ export default function WorkerManagement() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>नाम</TableHead>
-                    <TableHead>पिता का नाम</TableHead>
-                    <TableHead>फोन</TableHead>
-                    <TableHead className="w-40 text-right">एक्शन</TableHead>
+                    <TableHead>{isAdmin ? 'Name' : 'नाम'}</TableHead>
+                    <TableHead>{isAdmin ? "Father's Name" : 'पिता का नाम'}</TableHead>
+                    <TableHead>{isAdmin ? 'Phone' : 'फोन'}</TableHead>
+                    <TableHead className="w-40 text-right">{isAdmin ? 'Actions' : 'एक्शन'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -196,24 +270,36 @@ export default function WorkerManagement() {
                           <TableCell><Input value={editForm.fatherName} onChange={(e)=>setEditForm({...editForm, fatherName: e.target.value})} /></TableCell>
                           <TableCell><Input value={editForm.phone} onChange={(e)=>setEditForm({...editForm, phone: e.target.value})} /></TableCell>
                           <TableCell className="text-right space-x-2">
-                            <Button size="sm" onClick={()=>saveEdit(w.id)}>सेव</Button>
-                            <Button size="sm" variant="outline" onClick={cancelEdit}>रद्द</Button>
+                            <ConfirmDialog
+                              title={isAdmin ? 'Save changes?' : 'परिवर्तन सहेजें?'}
+                              description={isAdmin ? 'Do you want to save changes for this worker?' : 'क्या आप इस श्रमिक के बदलाव सहेजना चाहते हैं?'}
+                              confirmText={isAdmin ? 'Save' : 'सेव करें'}
+                              cancelText={isAdmin ? 'Cancel' : 'रद्द कर���ं'}
+                              onConfirm={() => saveEdit(w.id)}
+                              trigger={<Button size="sm">{isAdmin ? 'Save' : 'सेव'}</Button>}
+                            />
+                            <Button size="sm" variant="outline" onClick={cancelEdit}>{isAdmin ? 'Cancel' : 'रद्द करें'}</Button>
                           </TableCell>
                         </>
                       ) : (
                         <>
                           <TableCell className="font-medium">{w.name}</TableCell>
                           <TableCell>{w.fatherName}</TableCell>
-                          <TableCell>{w.phone || "उपलब्ध नहीं"}</TableCell>
+                          <TableCell>{isAdmin ? (w.phone || 'N/A') : (w.phone || 'उपलब्ध नहीं')}</TableCell>
                           <TableCell className="text-right space-x-3">
-                            {isForeman && (
+                            {(isForeman || isAdmin) && (
                               <>
-                                <Button size="sm" className="bg-cyan-400 hover:bg-cyan-500 text-white rounded-xl px-3" onClick={()=>startEdit(w)}>
-                                  <span className="sr-only">Edit</span> ✏️
+                                <Button size="sm" variant="outline" className="rounded-xl px-2" onClick={()=>startEdit(w)}>
+                                  <Pencil className="h-4 w-4" />
                                 </Button>
-                                <Button size="sm" className="bg-rose-500 hover:bg-rose-600 text-white rounded-xl px-3" onClick={()=>deleteWorker(w.id)}>
-                                  <span className="sr-only">Delete</span> 🗑️
-                                </Button>
+                                <ConfirmDialog
+                                  title={isAdmin ? 'Delete worker?' : 'श्रमिक हटाएं?'}
+                                  description={isAdmin ? 'Are you sure you want to delete this worker? This action cannot be undone.' : 'क्या आप इस श्रमिक को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।'}
+                                  confirmText={isAdmin ? 'Delete' : 'हटाएं'}
+                                  cancelText={isAdmin ? 'Cancel' : 'रद्द करें'}
+                                  onConfirm={() => deleteWorker(w.id)}
+                                  trigger={<Button size="sm" variant="destructive" className="rounded-xl px-2"><Trash2 className="h-4 w-4" /></Button>}
+                                />
                               </>
                             )}
                           </TableCell>

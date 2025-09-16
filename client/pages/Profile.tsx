@@ -22,10 +22,26 @@ export default function Profile() {
     setUsername(user?.username || "");
   }, [user?.id]);
 
-  const onSave = (e: React.FormEvent) => {
+  const onSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateUser({ name: name.trim(), username: username.trim() });
-    toast({ title: "प्रोफाइल अपडेट", description: "आपकी प्रोफाइल जानकारी सेव कर दी गई है" });
+    try {
+      const res = await fetch(`/api/admin/users/${user?.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({ name: name.trim(), username: username.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Failed to update profile");
+      }
+      updateUser({ name: data.data.user.name, username: data.data.user.username });
+      toast({ title: "प्रोफाइल अपडेट", description: "आपकी प्रोफाइल जानकारी सेव कर दी गई है" });
+    } catch (err: any) {
+      toast({ title: "त्रुटि", description: err.message || "अपडेट असफल रहा", variant: "destructive" });
+    }
   };
 
   const onChangePassword = async (e: React.FormEvent) => {
@@ -84,7 +100,7 @@ export default function Profile() {
               <Input id="username" value={username} onChange={(e)=>setUsername(e.target.value)} />
             </div>
             <div className="flex justify-end">
-              <Button type="submit">सेव क���ें</Button>
+              <Button type="submit">सेव करें</Button>
             </div>
           </form>
         </CardContent>

@@ -2,7 +2,7 @@ import type { RequestHandler } from "express";
 import { ApiResponse, CreateSiteRequest, CreateUserRequest, Site, User } from "@shared/api";
 import { database } from "../database/connection.js";
 import { getUserFromToken } from "./auth.js";
-import { setUserPassword } from "./auth.js";
+import { setUserPassword, userPasswords } from "./auth.js";
 
 export const handleCreateUser: RequestHandler = (req, res) => {
   try {
@@ -92,11 +92,26 @@ export const handleUpdateUser: RequestHandler = (req, res) => {
       return res.status(409).json(response);
     }
 
+    const oldUsername = user.username;
+
     if (typeof name === 'string') user.name = name;
     if (typeof fatherName === 'string') (user as any).fatherName = fatherName;
     if (typeof username === 'string') user.username = username;
     if (typeof siteId === 'string') user.siteId = siteId;
-    if (typeof password === 'string' && password) setUserPassword(user.username, password);
+
+    // Handle password and username changes coherently
+    if (typeof password === 'string' && password) {
+      // Set new password for (possibly new) username
+      setUserPassword(user.username, password);
+    } else if (user.username !== oldUsername) {
+      // Migrate existing password mapping to new username when username changes without password change
+      const existing = userPasswords.get(oldUsername) ?? "demo123";
+      setUserPassword(user.username, existing);
+    }
+    // Clean up old key if username changed
+    if (user.username !== oldUsername) {
+      userPasswords.delete(oldUsername);
+    }
 
     const response: ApiResponse<{ user: User }> = { success: true, data: { user } };
     return res.json(response);

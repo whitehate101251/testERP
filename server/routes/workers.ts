@@ -43,13 +43,13 @@ export const handleCreateWorker: RequestHandler = (req, res) => {
 export const handleUpdateWorker: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    if (!user || user.role !== 'foreman') {
+    if (!user || (user.role !== 'foreman' && user.role !== 'admin')) {
       const response: ApiResponse = { success: false, message: 'Unauthorized' };
       return res.status(401).json(response);
     }
     const { id } = req.params as { id: string };
     const worker = database.workers.find(w => w.id === id);
-    if (!worker || worker.siteId !== user.siteId) {
+    if (!worker || (user.role === 'foreman' && worker.siteId !== user.siteId)) {
       const response: ApiResponse = { success: false, message: 'Worker not found or access denied' };
       return res.status(404).json(response);
     }
@@ -72,12 +72,12 @@ export const handleUpdateWorker: RequestHandler = (req, res) => {
 export const handleDeleteWorker: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    if (!user || user.role !== 'foreman') {
+    if (!user || (user.role !== 'foreman' && user.role !== 'admin')) {
       const response: ApiResponse = { success: false, message: 'Unauthorized' };
       return res.status(401).json(response);
     }
     const { id } = req.params as { id: string };
-    const index = database.workers.findIndex(w => w.id === id && w.siteId === user.siteId);
+    const index = database.workers.findIndex(w => w.id === id && (user.role === 'admin' || w.siteId === user.siteId));
     if (index === -1) {
       const response: ApiResponse = { success: false, message: 'Worker not found or access denied' };
       return res.status(404).json(response);

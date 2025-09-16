@@ -18,8 +18,8 @@ const mockSites = {
 export const handleSubmitAttendance: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    
-    if (!user || user.role !== 'foreman') {
+
+    if (!user || user.role !== "foreman") {
       const response: ApiResponse = {
         success: false,
         message: "Unauthorized - Only foremen can submit attendance",
@@ -27,7 +27,17 @@ export const handleSubmitAttendance: RequestHandler = (req, res) => {
       return res.status(401).json(response);
     }
 
-    const { date, entries, inTime, outTime }: { date: string; entries: AttendanceEntry[]; inTime?: string; outTime?: string } = req.body;
+    const {
+      date,
+      entries,
+      inTime,
+      outTime,
+    }: {
+      date: string;
+      entries: AttendanceEntry[];
+      inTime?: string;
+      outTime?: string;
+    } = req.body;
 
     // Validate input
     if (!date || !entries || !Array.isArray(entries)) {
@@ -40,7 +50,7 @@ export const handleSubmitAttendance: RequestHandler = (req, res) => {
 
     // Check if already submitted for this date
     const existingRecord = database.attendanceRecords.find(
-      r => r.foremanId === user.id && r.date === date
+      (r) => r.foremanId === user.id && r.date === date,
     );
 
     if (existingRecord) {
@@ -52,7 +62,7 @@ export const handleSubmitAttendance: RequestHandler = (req, res) => {
     }
 
     // Create attendance record
-    const site = database.sites.find(s => s.id === user.siteId);
+    const site = database.sites.find((s) => s.id === user.siteId);
     const attendanceRecord: AttendanceRecord = {
       id: generateId(),
       date,
@@ -61,12 +71,12 @@ export const handleSubmitAttendance: RequestHandler = (req, res) => {
       foremanId: user.id,
       foremanName: user.name,
       entries,
-      status: 'submitted',
+      status: "submitted",
       ...(inTime ? { inTime } : {}),
       ...(outTime ? { outTime } : {}),
       submittedAt: new Date(),
       totalWorkers: entries.length,
-      presentWorkers: entries.filter(e => e.isPresent).length,
+      presentWorkers: entries.filter((e) => e.isPresent).length,
       createdBy: user.id,
     };
 
@@ -92,8 +102,8 @@ export const handleSubmitAttendance: RequestHandler = (req, res) => {
 export const handleSaveDraft: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    
-    if (!user || user.role !== 'foreman') {
+
+    if (!user || user.role !== "foreman") {
       const response: ApiResponse = {
         success: false,
         message: "Unauthorized",
@@ -121,7 +131,7 @@ export const handleSaveDraft: RequestHandler = (req, res) => {
 export const handleCheckSubmission: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    
+
     if (!user) {
       const response: ApiResponse = {
         success: false,
@@ -131,9 +141,9 @@ export const handleCheckSubmission: RequestHandler = (req, res) => {
     }
 
     const { date } = req.params;
-    
+
     const hasSubmitted = database.attendanceRecords.some(
-      r => r.foremanId === user.id && r.date === date
+      (r) => r.foremanId === user.id && r.date === date,
     );
 
     const response: ApiResponse<boolean> = {
@@ -155,8 +165,8 @@ export const handleCheckSubmission: RequestHandler = (req, res) => {
 export const handlePendingReview: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    
-    if (!user || user.role !== 'site_incharge') {
+
+    if (!user || user.role !== "site_incharge") {
       const response: ApiResponse = {
         success: false,
         message: "Unauthorized - Only site incharges can review attendance",
@@ -166,10 +176,12 @@ export const handlePendingReview: RequestHandler = (req, res) => {
 
     // Get pending records for this site incharge's site
     const pendingRecords = database.attendanceRecords
-      .filter(r => r.siteId === user.siteId && r.status === 'submitted')
-      .map(r => ({
+      .filter((r) => r.siteId === user.siteId && r.status === "submitted")
+      .map((r) => ({
         ...r,
-        foremanName: database.users.find(u => u.id === r.foremanId)?.name || r.foremanName,
+        foremanName:
+          database.users.find((u) => u.id === r.foremanId)?.name ||
+          r.foremanName,
       }));
 
     const response: ApiResponse<AttendanceRecord[]> = {
@@ -191,8 +203,8 @@ export const handlePendingReview: RequestHandler = (req, res) => {
 export const handleReviewAttendance: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    
-    if (!user || user.role !== 'site_incharge') {
+
+    if (!user || user.role !== "site_incharge") {
       const response: ApiResponse = {
         success: false,
         message: "Unauthorized",
@@ -201,20 +213,22 @@ export const handleReviewAttendance: RequestHandler = (req, res) => {
     }
 
     const { id } = req.params;
-    const { 
-      action, 
-      entries, 
-      inchargeComments, 
-      checkedEntries 
-    }: { 
-      action: 'approve' | 'reject'; 
+    const {
+      action,
+      entries,
+      inchargeComments,
+      checkedEntries,
+    }: {
+      action: "approve" | "reject";
       entries: AttendanceEntry[];
       inchargeComments: string;
       checkedEntries: string[];
     } = req.body;
 
-    const recordIndex = database.attendanceRecords.findIndex(r => r.id === id);
-    
+    const recordIndex = database.attendanceRecords.findIndex(
+      (r) => r.id === id,
+    );
+
     if (recordIndex === -1) {
       const response: ApiResponse = {
         success: false,
@@ -230,7 +244,7 @@ export const handleReviewAttendance: RequestHandler = (req, res) => {
     record.inchargeComments = inchargeComments;
     record.reviewedAt = new Date();
     record.reviewedBy = user.id;
-    record.status = action === 'approve' ? 'incharge_reviewed' : 'rejected';
+    record.status = action === "approve" ? "incharge_reviewed" : "rejected";
 
     database.attendanceRecords[recordIndex] = record;
 
@@ -253,8 +267,8 @@ export const handleReviewAttendance: RequestHandler = (req, res) => {
 export const handlePendingAdmin: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    
-    if (!user || user.role !== 'admin') {
+
+    if (!user || user.role !== "admin") {
       const response: ApiResponse = {
         success: false,
         message: "Unauthorized - Only admins can access this",
@@ -264,10 +278,12 @@ export const handlePendingAdmin: RequestHandler = (req, res) => {
 
     // Get records pending admin approval
     const pendingRecords = database.attendanceRecords
-      .filter(r => r.status === 'incharge_reviewed')
-      .map(r => ({
+      .filter((r) => r.status === "incharge_reviewed")
+      .map((r) => ({
         ...r,
-        foremanName: database.users.find(u => u.id === r.foremanId)?.name || r.foremanName,
+        foremanName:
+          database.users.find((u) => u.id === r.foremanId)?.name ||
+          r.foremanName,
       }));
 
     const response: ApiResponse<AttendanceRecord[]> = {
@@ -289,8 +305,8 @@ export const handlePendingAdmin: RequestHandler = (req, res) => {
 export const handleAdminApprove: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    
-    if (!user || user.role !== 'admin') {
+
+    if (!user || user.role !== "admin") {
       const response: ApiResponse = {
         success: false,
         message: "Unauthorized",
@@ -299,16 +315,18 @@ export const handleAdminApprove: RequestHandler = (req, res) => {
     }
 
     const { id } = req.params;
-    const { 
-      action, 
-      adminComments 
-    }: { 
-      action: 'approve' | 'reject'; 
+    const {
+      action,
+      adminComments,
+    }: {
+      action: "approve" | "reject";
       adminComments: string;
     } = req.body;
 
-    const recordIndex = database.attendanceRecords.findIndex(r => r.id === id);
-    
+    const recordIndex = database.attendanceRecords.findIndex(
+      (r) => r.id === id,
+    );
+
     if (recordIndex === -1) {
       const response: ApiResponse = {
         success: false,
@@ -323,7 +341,7 @@ export const handleAdminApprove: RequestHandler = (req, res) => {
     record.adminComments = adminComments;
     record.approvedAt = new Date();
     record.approvedBy = user.id;
-    record.status = action === 'approve' ? 'admin_approved' : 'rejected';
+    record.status = action === "approve" ? "admin_approved" : "rejected";
 
     database.attendanceRecords[recordIndex] = record;
 
@@ -346,8 +364,8 @@ export const handleAdminApprove: RequestHandler = (req, res) => {
 export const handleApprovedRecords: RequestHandler = (req, res) => {
   try {
     const user = getUserFromToken(req.headers.authorization);
-    
-    if (!user || user.role !== 'admin') {
+
+    if (!user || user.role !== "admin") {
       const response: ApiResponse = {
         success: false,
         message: "Unauthorized",
@@ -357,8 +375,11 @@ export const handleApprovedRecords: RequestHandler = (req, res) => {
 
     // Get approved records
     const approvedRecords = database.attendanceRecords
-      .filter(r => r.status === 'admin_approved')
-      .sort((a, b) => new Date(b.approvedAt!).getTime() - new Date(a.approvedAt!).getTime())
+      .filter((r) => r.status === "admin_approved")
+      .sort(
+        (a, b) =>
+          new Date(b.approvedAt!).getTime() - new Date(a.approvedAt!).getTime(),
+      )
       .slice(0, 20); // Last 20 approved records
 
     const response: ApiResponse<AttendanceRecord[]> = {
@@ -369,6 +390,49 @@ export const handleApprovedRecords: RequestHandler = (req, res) => {
     res.json(response);
   } catch (error) {
     console.error("Approved records error:", error);
+    const response: ApiResponse = {
+      success: false,
+      message: "Internal server error",
+    };
+    res.status(500).json(response);
+  }
+};
+
+export const handleAttendanceByForeman: RequestHandler = (req, res) => {
+  try {
+    const user = getUserFromToken(req.headers.authorization);
+
+    if (!user || user.role !== "admin") {
+      const response: ApiResponse = {
+        success: false,
+        message: "Unauthorized - Only admins can access this",
+      };
+      return res.status(401).json(response);
+    }
+
+    const { foremanId } = req.params as { foremanId: string };
+
+    const records = database.attendanceRecords
+      .filter((r) => r.foremanId === foremanId)
+      .map((r) => ({
+        ...r,
+        foremanName:
+          database.users.find((u) => u.id === r.foremanId)?.name ||
+          r.foremanName,
+      }))
+      .sort(
+        (a, b) =>
+          new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime(),
+      );
+
+    const response: ApiResponse<AttendanceRecord[]> = {
+      success: true,
+      data: records,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Attendance by foreman error:", error);
     const response: ApiResponse = {
       success: false,
       message: "Internal server error",

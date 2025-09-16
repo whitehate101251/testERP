@@ -140,7 +140,7 @@ export default function AttendanceSubmission() {
     try {
       const draftKey = getDraftKey(new Date(selectedDate));
       localStorage.setItem(draftKey, JSON.stringify(attendanceEntries));
-      toast({ title: "ड्र��फ्ट सेव", description: "हाज़िरी ड्राफ्ट लोकली सेव हो गया" });
+      toast({ title: "ड्राफ्ट सेव", description: "हाज़िरी ड्राफ्ट लोकली सेव हो गया" });
     } catch {
       toast({ title: "Error", description: "Failed to save draft", variant: "destructive" });
     }
@@ -156,7 +156,7 @@ export default function AttendanceSubmission() {
       }
       const parsed: EntryWithFormula[] = JSON.parse(stored);
       setAttendanceEntries(parsed);
-      toast({ title: "ड्राफ्ट लो��� हुआ", description: "पिछला सेव ड्राफ्ट लोड कर दिया गया" });
+      toast({ title: "ड्राफ्ट लोड हुआ", description: "पिछला सेव ड्राफ्ट लोड कर दिया गया" });
     } catch {
       toast({ title: "Error", description: "Failed to load draft", variant: "destructive" });
     }
@@ -362,7 +362,7 @@ export default function AttendanceSubmission() {
             <div>
               <div className="flex gap-5 md:flex-row flex-col md:items-stretch md:gap-5">
                 <div className="flex flex-col w-full md:w-1/2">
-                  <Label className="text-sm mx-auto">��न टाइम</Label>
+                  <Label className="text-sm mx-auto">इन टाइम</Label>
                   <Button variant="outline" className="w-full" onClick={() => openTimePicker("in")}>
                     {globalInTime || "-- : -- AM/PM"}
                   </Button>
@@ -385,13 +385,9 @@ export default function AttendanceSubmission() {
                   <TableHead className="w-12 pl-[19px] pr-4">P/A</TableHead>
                   <TableHead className="pr-[15px] pl-[41px]">नाम</TableHead>
                   <TableHead className="pr-4 pl-8">पिता का नाम</TableHead>
-                  <TableHead className="w-40 relative px-4" colSpan={2}>
-                    <div className="grid grid-cols-2 place-items-center h-8">
-                      <span className="text-[17px]">X</span>
-                      <span className="text-[17px]">Y</span>
-                    </div>
-                    <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-xs text-muted-foreground">P</span>
-                  </TableHead>
+                  <TableHead className="w-20 px-4 text-center">X</TableHead>
+                  <TableHead className="w-12 px-0 text-center">P</TableHead>
+                  <TableHead className="w-20 px-4 text-center">Y</TableHead>
                   <TableHead className="w-20 pr-[25px] pl-4">घंटे</TableHead>
                 </TableRow>
               </TableHeader>
@@ -419,6 +415,7 @@ export default function AttendanceSubmission() {
                           {entry.formulaX ?? 0}
                         </Button>
                       </TableCell>
+                      <TableCell className="px-0 text-center text-xs text-muted-foreground">P</TableCell>
                       <TableCell className="pl-4">
                         <Button variant="outline" className="w-16 mx-auto" disabled={!entry.isPresent} onClick={() => openFormulaDialog(entry.workerId, "Y")}>
                           {entry.formulaY ?? 0}
@@ -509,7 +506,7 @@ export default function AttendanceSubmission() {
             onChange={(t: TimeValue) => { setPickHour(t.hours); setPickMinute(t.minutes); setPickAmPm(t.period); }}
           />
           <div className="flex justify-between gap-2 mt-3">
-            <Button variant="outline" onClick={()=>setTimePickerOpen(false)}>रद���द करें</Button>
+            <Button variant="outline" onClick={()=>setTimePickerOpen(false)}>रद्द करें</Button>
             <Button onClick={applyPickedTime}>ठीक है</Button>
           </div>
         </DialogContent>

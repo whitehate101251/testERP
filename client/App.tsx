@@ -1,5 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  ReactNode,
+} from "react";
 import { User } from "@shared/api";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -8,6 +14,7 @@ import AttendanceReview from "./pages/AttendanceReview";
 import AdminApproval from "./pages/AdminApproval";
 import WorkerManagement from "./pages/WorkerManagement";
 import SiteManagement from "./pages/SiteManagement";
+import Sites from "./pages/Sites";
 import Layout from "./components/Layout";
 import { Toaster } from "./components/ui/toaster";
 import Profile from "./pages/Profile";
@@ -38,7 +45,7 @@ function AuthProvider({ children }: { children: ReactNode }) {
     // Check for stored auth token on app start
     const token = localStorage.getItem("auth_token");
     const userData = localStorage.getItem("user_data");
-    
+
     if (token && userData) {
       try {
         const parsedUser = JSON.parse(userData);
@@ -73,17 +80,29 @@ function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, updateUser, isLoading }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, updateUser, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
-function ProtectedRoute({ children, requiredRole }: { children: ReactNode; requiredRole?: string[] }) {
+function ProtectedRoute({
+  children,
+  requiredRole,
+}: {
+  children: ReactNode;
+  requiredRole?: string[];
+}) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        Loading...
+      </div>
+    );
   }
 
   if (!user) {
@@ -103,49 +122,81 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/attendance/submit" element={
-            <ProtectedRoute requiredRole={['foreman']}>
-              <AttendanceSubmission />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/attendance/review" element={
-            <ProtectedRoute requiredRole={['site_incharge']}>
-              <AttendanceReview />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/attendance/admin" element={
-            <ProtectedRoute requiredRole={['admin']}>
-              <AdminApproval />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/workers" element={
-            <ProtectedRoute requiredRole={['admin', 'site_incharge', 'foreman']}>
-              <WorkerManagement />
-            </ProtectedRoute>
-          } />
 
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/sites" element={
-            <ProtectedRoute requiredRole={['admin']}>
-              <SiteManagement />
-            </ProtectedRoute>
-          } />
-          
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/attendance/submit"
+            element={
+              <ProtectedRoute requiredRole={["foreman"]}>
+                <AttendanceSubmission />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/attendance/review"
+            element={
+              <ProtectedRoute requiredRole={["site_incharge"]}>
+                <AttendanceReview />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/attendance/admin"
+            element={
+              <ProtectedRoute requiredRole={["admin"]}>
+                <AdminApproval />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/workers"
+            element={
+              <ProtectedRoute
+                requiredRole={["admin", "site_incharge", "foreman"]}
+              >
+                <WorkerManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/sites"
+            element={
+              <ProtectedRoute requiredRole={["admin"]}>
+                <SiteManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/sites/overview"
+            element={
+              <ProtectedRoute requiredRole={["admin"]}>
+                <Sites />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
